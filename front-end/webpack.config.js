@@ -24,5 +24,6 @@ module.exports = {
             path.resolve(__dirname, "app")
         ],
         extensions: [".js", ".json", ".jsx", ".css"],
-    }
+    },
+    watch: true // permet de ne pas refaire npm start à chaque fois.
 }

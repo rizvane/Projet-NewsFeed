@@ -4,7 +4,8 @@ const axios = require('axios')
 
 router.route('/').get(function (request, response) {
     axios.get('https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=473711f17aff4f48a821fea3a931e2be'
-    ).then((httpresponse) => response.send(httpresponse.data.articles))})
+    ).then((httpresponse) => response.send(httpresponse.data.articles))
+})
 
 router.route('/news').get((request, response) => {
     response.send('[{}]')

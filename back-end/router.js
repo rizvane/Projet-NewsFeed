@@ -7,11 +7,6 @@ router.route('/').get(function (request, response) {
     ).then((httpresponse) => response.send(httpresponse.data.articles))
 })
 
-router.route('/news').get((request, response) => {
-    response.send('[{}]')
-})
-
-
 router.route('/news/:id').get((request, response) => {
     response.send(request.params)
 })

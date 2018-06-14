@@ -1,6 +1,10 @@
 import {messages} from "./messages";
 import axios from 'axios'
 
-axios.get('http://127.0.0.1:8080').then((response) => console.log(response))
-console.log('App.js loaded')
-console.log(messages)
+const webSocket = new WebSocket('ws://localhost:8888')
+
+webSocket.onmessage = (e) => {
+    let response = e.data
+    console.log(response)
+
+}

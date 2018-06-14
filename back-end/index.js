@@ -42,16 +42,20 @@ let clients = []
 wsServer.on('connection', (webSocket) => {
 
     console.log('WebSocket Server :: a new client has connected')
-    //webSocket.send()
+    var response = {refresh: true}
+    webSocket.send(JSON.stringify(response))
+
+    //Cette fonction s'active quand le serveur reçoit le message.
+    /*webSocket.onmessage = (message) => {
+        webSocket.send("Salut")
+        console.log('WebSocket :: got a new message', message.data)
+    }*/
+
+
 
     webSocket.onclose = (event) => {
         console.log('WebSocket :: client disconnected')
         clients = clients.filter((client) => client !== webSocket)
-    }
-
-    //Cette fonction s'active quand le serveur reçoit le message.
-    webSocket.onmessage = (message) => {
-        console.log('WebSocket :: got a new message', message.data)
     }
     clients.push(webSocket)
 

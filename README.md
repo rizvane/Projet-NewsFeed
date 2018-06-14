@@ -28,9 +28,6 @@ récupération d'un nouveau message.
 
 ## Le Front-End
 
-Il est conseillé pour le front-end de démarrer en utilisant https://github.com/lp1dev/webpack-boilerplate comme base. 
-Vous gagnerez du temps de configuration de votre projet.
-
 Les dépendances de la boilerplate s'installent avec 
 > npm install
 

@@ -6,6 +6,8 @@ const bodyParser = require('body-parser')
 // Internal imports
 const router = require('./router.js')
 const config = require('./config.json')
+const news = require('./news.js')
+
 
 // HTTP Server initialisation
 function initHttpServer() {
@@ -42,13 +44,28 @@ let clients = []
 wsServer.on('connection', (webSocket) => {
 
     console.log('WebSocket Server :: a new client has connected')
-    var response = {refresh: true}
-    webSocket.send(JSON.stringify(response))
+    webSocket.send(JSON.stringify({firstUpdate: true}))
+    setInterval(function(){
+        if(news.getUpdateBool()){
+            webSocket.send(JSON.stringify(news.getUpdatedNews()))
+            news.triggerUpdatedNews()
+            news.updateBool(false)
+        }
+    }, 1000)
 
     //Cette fonction s'active quand le serveur reçoit le message.
-    /*webSocket.onmessage = (message) => {
-        webSocket.send("Salut")
+    /*
+    webSocket.onmessage = (message) => {
         console.log('WebSocket :: got a new message', message.data)
+        news.addNews(message.data)
+        news.updateBool(true)
+        console.log(news.getUpdateBool())
+        if(news.getUpdateBool()){
+            webSocket.send(JSON.stringify(news.getUpdatedNews()))
+            news.triggerUpdatedNews()
+            news.updateBool(false)
+            console.log(news.getUpdateBool())
+        }
     }*/
 
 

@@ -6,36 +6,36 @@ const NewsAPI = require('newsapi');
 const newsapi = new NewsAPI('473711f17aff4f48a821fea3a931e2be');
 
 newsapi.v2.topHeadlines({
-    country:'us'
+    language: 'en',
+    pageSize: 100
 }).then(httpResponse => {
-    if(headLines.length === 0){
-        httpResponse.articles.forEach(function(article){
-            headLines.unshift(article)
-        })
-    }
+    httpResponse.articles.forEach((article) => {
+        addNews(article, false)
+    })
     console.log(headLines.length)
 })
 
 
 setInterval(function(){
     newsapi.v2.topHeadlines({
-        country:'us'
+        language: 'en',
+        pageSize: 100
     }).then(httpResponse => {
         if(JSON.stringify(httpResponse.articles[0]) !== JSON.stringify(headLines[headLines.length-1])){
-            addNews(JSON.stringify(httpResponse.articles[0]))
+            updatedNews = []
+            httpResponse.articles.forEach((article) => {
+                addNews(article)
+            })
         }
     })
     console.log(headLines.length)
-}, 1000)
+}, 5000)
 
-function addNews(obj){
-    if(obj !== JSON.stringify(headLines[headLines.length-1])){
-        let theNews = JSON.parse(obj)
-        if(headLines.filter(article => article.url === theNews.url).length === 0){
-            headLines.unshift(theNews)
-            updatedNews.push(theNews)
-            update = true
-        }
+function addNews(obj, bool = true){
+    if(headLines.filter(article => article.url === obj.url).length === 0){
+        headLines.push(obj)
+        updatedNews.unshift(obj)
+        update = bool
     }
 }
 
@@ -55,8 +55,4 @@ function getUpdatedNews(){
     return updatedNews
 }
 
-function triggerUpdatedNews(){
-    updatedNews = []
-}
-
-module.exports = { getHeadLines: getHeadLines, updateBool: updateBool, getUpdateBool: getUpdateBool, getUpdatedNews: getUpdatedNews, triggerUpdatedNews: triggerUpdatedNews, addNews: addNews }
+module.exports = { getHeadLines: getHeadLines, updateBool: updateBool, getUpdateBool: getUpdateBool, getUpdatedNews: getUpdatedNews, addNews: addNews }

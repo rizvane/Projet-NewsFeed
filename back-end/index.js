@@ -44,30 +44,22 @@ let clients = []
 wsServer.on('connection', (webSocket) => {
 
     console.log('WebSocket Server :: a new client has connected')
-    webSocket.send(JSON.stringify({firstUpdate: true}))
+
     setInterval(function(){
         if(news.getUpdateBool()){
             webSocket.send(JSON.stringify(news.getUpdatedNews()))
-            news.triggerUpdatedNews()
             news.updateBool(false)
         }
-    }, 1000)
+    }, 5000)
 
     //Cette fonction s'active quand le serveur reçoit le message.
     /*
     webSocket.onmessage = (message) => {
         console.log('WebSocket :: got a new message', message.data)
-        news.addNews(message.data)
-        news.updateBool(true)
-        console.log(news.getUpdateBool())
-        if(news.getUpdateBool()){
-            webSocket.send(JSON.stringify(news.getUpdatedNews()))
-            news.triggerUpdatedNews()
-            news.updateBool(false)
-            console.log(news.getUpdateBool())
-        }
-    }*/
-
+        var theNews = JSON.parse(message.data)
+        news.addNews(theNews, true)
+    }
+    */
 
 
     webSocket.onclose = (event) => {

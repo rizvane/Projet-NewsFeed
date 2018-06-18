@@ -1,14 +1,31 @@
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
+const news = require('./news.js')
 
 router.route('/').get(function (request, response) {
-    axios.get('https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=473711f17aff4f48a821fea3a931e2be'
-    ).then((httpresponse) => response.send(httpresponse.data.articles))
+    response.send(news.getHeadLines())
+
 })
 
-router.route('/news/:id').get((request, response) => {
-    response.send(request.params)
+router.route('/news/:param/:id').get((request, response) => {
+    if(request.params.param === "headlines"){
+     response.send(news.getHeadLines()[request.params.id])
+    }
+})
+
+router.route('/search/:keyword').get((request, response) => {
+    news.addNews(null, null, request.params.keyword, false)
+    setTimeout(() => {
+        response.send(news.getSearchedNews(request.params.keyword))
+    }, 1000)
+})
+
+router.route('/search/:keyword/renew').get((request, response) => {
+    news.addNews(null, null, request.params.keyword, true)
+    setTimeout(() => {
+        response.send(news.getSearchedNews(request.params.keyword))
+    }, 1000)
 })
 
 

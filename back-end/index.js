@@ -6,6 +6,8 @@ const bodyParser = require('body-parser')
 // Internal imports
 const router = require('./router.js')
 const config = require('./config.json')
+const news = require('./news.js')
+
 
 // HTTP Server initialisation
 function initHttpServer() {
@@ -41,17 +43,37 @@ let clients = []
 
 wsServer.on('connection', (webSocket) => {
     console.log('WebSocket Server :: a new client has connected')
+    console.log(webSocket.id)
+    setInterval(function(){
+        if(news.getUpdateBool()){
+            webSocket.send(JSON.stringify(news.getUpdatedNews()))
+            news.updateBool(false)
+        }
+    }, 5000)
+
+    //Cette fonction s'active quand le serveur reçoit le message.
+    /*
+    webSocket.onmessage = (message) => {
+        console.log('WebSocket :: got a new message', message.data)
+        var theNews = JSON.parse(message.data)
+        news.addNews("headLines", theNews, null, true)
+    }
+    */
+
 
     webSocket.onclose = (event) => {
         console.log('WebSocket :: client disconnected')
         clients = clients.filter((client) => client !== webSocket)
     }
+
+    //Cette fonction s'active quand le serveur reçoit le message.
     webSocket.onmessage = (message) => {
         console.log('WebSocket :: got a new message', message.data)
     }
     clients.push(webSocket)
-})
 
+
+})
 
 // Servers log
 console.log(`HTTP server listening on ${config.http.host}:${config.http.port}`)

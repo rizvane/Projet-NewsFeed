@@ -44,7 +44,7 @@ let clients = []
 wsServer.on('connection', (webSocket) => {
 
     console.log('WebSocket Server :: a new client has connected')
-
+    console.log(webSocket.id)
     setInterval(function(){
         if(news.getUpdateBool()){
             webSocket.send(JSON.stringify(news.getUpdatedNews()))
@@ -57,7 +57,7 @@ wsServer.on('connection', (webSocket) => {
     webSocket.onmessage = (message) => {
         console.log('WebSocket :: got a new message', message.data)
         var theNews = JSON.parse(message.data)
-        news.addNews(theNews, true)
+        news.addNews("headLines", theNews, null, true)
     }
     */
 
@@ -68,9 +68,7 @@ wsServer.on('connection', (webSocket) => {
     }
     clients.push(webSocket)
 
-
 })
-
 
 // Servers log
 console.log(`HTTP server listening on ${config.http.host}:${config.http.port}`)

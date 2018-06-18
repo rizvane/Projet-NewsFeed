@@ -6,18 +6,21 @@ const bodyParser = require('body-parser')
 // Internal imports
 const router = require('./router.js')
 const config = require('./config.json')
+const news = require('./news.js')
+
 
 // HTTP Server initialisation
 function initHttpServer() {
     const server = express()
-    server.use(bodyParser.json())
-    server.use(router)
+
     server.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*')
         res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
         next()
     })
+    server.use(bodyParser.json())
+    server.use(router)
     return server
 }
 
@@ -39,18 +42,33 @@ const wsServer = initWSServer()
 let clients = []
 
 wsServer.on('connection', (webSocket) => {
+
     console.log('WebSocket Server :: a new client has connected')
-    
+    console.log(webSocket.id)
+    setInterval(function(){
+        if(news.getUpdateBool()){
+            webSocket.send(JSON.stringify(news.getUpdatedNews()))
+            news.updateBool(false)
+        }
+    }, 5000)
+
+    //Cette fonction s'active quand le serveur reçoit le message.
+    /*
+    webSocket.onmessage = (message) => {
+        console.log('WebSocket :: got a new message', message.data)
+        var theNews = JSON.parse(message.data)
+        news.addNews("headLines", theNews, null, true)
+    }
+    */
+
+
     webSocket.onclose = (event) => {
         console.log('WebSocket :: client disconnected')
         clients = clients.filter((client) => client !== webSocket)
     }
-    webSocket.onmessage = (message) => {
-        console.log('WebSocket :: got a new message', message.data)
-    }
     clients.push(webSocket)
-})
 
+})
 
 // Servers log
 console.log(`HTTP server listening on ${config.http.host}:${config.http.port}`)

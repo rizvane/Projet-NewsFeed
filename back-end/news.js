@@ -10,10 +10,11 @@ newsapi.v2.topHeadlines({
     pageSize: 20
 }).then(httpResponse => {
     httpResponse.articles.forEach((article) => {
-        if(headLines.filter(oldArticle => oldArticle.url === article.url).length === 0){
+        if(headLines.filter(oldArticle => oldArticle.url === article.url).length === 0 && article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null){
             headLines.unshift(article)
         }
     })
+    console.log(headLines.length)
 })
 
 
@@ -23,8 +24,7 @@ setInterval(function(){
         pageSize: 20
     }).then(httpResponse => {
         httpResponse.articles.forEach((article) => {
-            var clength = headLines.filter(oldArticle => oldArticle.url === article.url).length
-            if(clength === 0) {
+            if(headLines.filter(oldArticle => oldArticle.url === article.url).length === 0 && article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null) {
                 headLines.push(article)
                 updatedNews.push(article)
             }

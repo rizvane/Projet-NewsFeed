@@ -8,10 +8,8 @@ router.route('/').get(function (request, response) {
 
 })
 
-router.route('/news/:param/:id').get((request, response) => {
-    if(request.params.param === "headlines"){
-     response.send(news.getHeadLines()[request.params.id])
-    }
+router.route('/news/:id').get((request, response) => {
+    response.send(news.getHeadLines()[request.params.id])
 })
 
 router.route('/search/:keyword').get((request, response) => {

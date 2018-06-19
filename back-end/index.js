@@ -56,18 +56,13 @@ wsServer.on('connection', (webSocket) => {
         if(message.data === "reset"){
             news.resetUpdatedNews()
         }
-        /*else{
-            var theNews = JSON.parse(message.data)
-            theNews.forEach((article) => {
-                news.addNews(article, null, true)
-            })
-        }*/
     }
 
     webSocket.onclose = (event) => {
         console.log('WebSocket :: client disconnected')
         clients = clients.filter((client) => client !== webSocket)
     }
+
 
     clients.push(webSocket)
 

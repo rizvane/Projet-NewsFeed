@@ -1,53 +1,44 @@
 const headLines = []
-let searchedNews = {}
+let searchedNews = []
 let updatedNews = []
 
 const NewsAPI = require('newsapi');
 const newsapi = new NewsAPI('473711f17aff4f48a821fea3a931e2be');
 
-newsapi.v2.everything({
+newsapi.v2.topHeadlines({
     language: 'en',
-    q: "android",
-    sortBy: "publishedAt",
     pageSize: 20
 }).then(httpResponse => {
     httpResponse.articles.forEach((article) => {
-        if(headLines.filter(oldArticle => oldArticle.url === article.url).length === 0){
+        if(headLines.filter(oldArticle => oldArticle.url === article.url).length === 0 && article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null){
             headLines.unshift(article)
         }
     })
+    console.log(headLines.length)
 })
 
 
 setInterval(function(){
-    newsapi.v2.everything({
+    newsapi.v2.topHeadlines({
         language: 'fr',
-        q: "android",
-        sortBy: "publishedAt",
         pageSize: 20
     }).then(httpResponse => {
         httpResponse.articles.forEach((article) => {
-            var clength = headLines.filter(oldArticle => oldArticle.url === article.url).length
-            if(clength === 0) {
+            if(headLines.filter(oldArticle => oldArticle.url === article.url).length === 0 && article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null) {
                 headLines.push(article)
                 updatedNews.push(article)
             }
         })
     })
-}, 10000)
+}, 5000)
 
 
-function addNews(obj, keyword, bool){
-    if(searchedNews[keyword] !== undefined && bool === false){
-        newsapi.v2.everything({
-            q: keyword,
-            language: 'fr',
-            pageSize: 20
-        }).then(response => {
-            var count = searchedNews[keyword].count + 1
-            var date = searchedNews[keyword].date
-            searchedNews[keyword] = {date: date, count: count, articles: response.articles}
-        });
+function addNews(keyword, limit=20, bool){
+    if(searchedNews[keyword] !== undefined && bool === false && limit <= searchedNews[keyword].articles[0].length){
+        var count = searchedNews[keyword].count + 1
+        var date = searchedNews[keyword].date
+        searchedNews[keyword] = {date: date, count: count, articles: searchedNews[keyword].articles}
+        console.log(searchedNews[keyword])
     }else{
         let date = new Date();
         let months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
@@ -55,13 +46,14 @@ function addNews(obj, keyword, bool){
         if(minutes < 10){
             minutes = "0" + minutes
         }
-        date = date.getUTCDate() + "/" + months[date.getUTCMonth()] + "/" + date.getUTCFullYear() + " à " + date.getUTCHours() + "h" + minutes
+        date = date.getUTCDate() + "/" + months[date.getUTCMonth()] + "/" + date.getUTCFullYear() + " à " + (date.getUTCHours()+2) + "h" + minutes
         newsapi.v2.everything({
             q: keyword,
             language: 'fr',
-            pageSize: 20
+            pageSize: limit
         }).then(response => {
-            searchedNews[keyword] = {date: date, count: 1, articles: response.articles}
+            searchedNews[keyword] = {date: date, count: 1, articles : []}
+            searchedNews[keyword].articles.push(response.articles)
         });
     }
 }

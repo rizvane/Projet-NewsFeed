@@ -15,14 +15,14 @@ router.route('/news/:param/:id').get((request, response) => {
 })
 
 router.route('/search/:keyword').get((request, response) => {
-    news.addNews(null, null, request.params.keyword, false)
+    news.addNews(null, request.params.keyword, false)
     setTimeout(() => {
         response.send(news.getSearchedNews(request.params.keyword))
     }, 1000)
 })
 
 router.route('/search/:keyword/renew').get((request, response) => {
-    news.addNews(null, null, request.params.keyword, true)
+    news.addNews(null, request.params.keyword, true)
     setTimeout(() => {
         response.send(news.getSearchedNews(request.params.keyword))
     }, 1000)

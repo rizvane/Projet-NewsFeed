@@ -37,7 +37,7 @@ setInterval(function(){
 }, 10000)
 
 
-function addNews(arrayName, obj, keyword, bool){
+function addNews(obj, keyword, bool){
     if(searchedNews[keyword] !== undefined && bool === false){
         newsapi.v2.everything({
             q: keyword,

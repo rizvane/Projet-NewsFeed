@@ -59,7 +59,7 @@ wsServer.on('connection', (webSocket) => {
         /*else{
             var theNews = JSON.parse(message.data)
             theNews.forEach((article) => {
-                news.addNews("headLines", article, null, true)
+                news.addNews(article, null, true)
             })
         }*/
     }

@@ -5,10 +5,8 @@ let updatedNews = []
 const NewsAPI = require('newsapi');
 const newsapi = new NewsAPI('473711f17aff4f48a821fea3a931e2be');
 
-newsapi.v2.everything({
+newsapi.v2.topHeadlines({
     language: 'en',
-    q: "android",
-    sortBy: "publishedAt",
     pageSize: 20
 }).then(httpResponse => {
     httpResponse.articles.forEach((article) => {
@@ -20,10 +18,8 @@ newsapi.v2.everything({
 
 
 setInterval(function(){
-    newsapi.v2.everything({
+    newsapi.v2.topHeadlines({
         language: 'fr',
-        q: "android",
-        sortBy: "publishedAt",
         pageSize: 20
     }).then(httpResponse => {
         httpResponse.articles.forEach((article) => {

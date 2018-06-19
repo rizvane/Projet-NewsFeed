@@ -73,9 +73,50 @@ else if (url.toString().includes('news.html')){
 
             document.getElementById("news").innerHTML = newsDivs
 
+            document.title = article.title
+
         }).catch((e) => {
             document.getElementById('news').innerHTML = "<h1>Erreur lors de la connexion au Back-End</h1>"
         })
     }
-}
+}else{
+    var search = url.searchParams.get('search')
+    if(search === ""){
+        window.location.replace("index.html");
+    }
+    var lien = ""
+    if(url.searchParams.get('renew') === null){
+        lien = 'http://localhost:8080/search/' + search
+    }else{
+        lien = 'http://localhost:8080/search/' + search + '/renew'
+    }
+    axios.get(lien).then((httpResponse) => {
+        let searched = httpResponse.data
 
+        document.getElementById('beforeBadge').innerHTML = "<div style='cursor: pointer;' href='search.html?search=" + search + "&renew=true' class='alert alert-primary' role='alert'> Nombre de recherche: " + searched.count + " -  Dernière actualisation : " + searched.date + "<a href='search.html?search=" + search + "&renew=true'> Cliquez ici pour mettre à jour </a></div>"
+
+        let newsDivs = ""
+
+        searched.articles.forEach((lesArticles) => {
+            lesArticles.forEach((article) => {
+
+                if(article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null){
+                    newsDivs += "<div class='col-xl-12 col-sm-12'>"
+                    newsDivs += "<p class='text-center font-weight-bold'><h1>" + article.title + "</h1></p>"
+                    newsDivs += "<img class='col-xl-10 col-sm-10' src='" + article.urlToImage + "' class='img-fluid'>"
+                    newsDivs += "<hr><p><h4>" + article.description + "</h4></p>"
+                    newsDivs += "<p class='text-right'>" + article.author + "</p>"
+                    newsDivs += "</div>"
+                }
+
+            })
+        })
+
+        document.getElementById("news").innerHTML = newsDivs
+
+        document.title = "Recherche news: '" + search + "'"
+
+    }).catch((e) => {
+        document.getElementById('news').innerHTML = "<h1>Erreur lors de la connexion au Back-End</h1>"
+    })
+}

@@ -13,17 +13,19 @@ router.route('/news/:id').get((request, response) => {
 })
 
 router.route('/search/:keyword').get((request, response) => {
-    news.addNews(null, request.params.keyword, false)
+    news.addNews(request.params.keyword, false)
     setTimeout(() => {
+        console.log(news.getSearchedNews(request.params.keyword))
         response.send(news.getSearchedNews(request.params.keyword))
-    }, 1000)
+    }, 2000)
 })
 
 router.route('/search/:keyword/renew').get((request, response) => {
-    news.addNews(null, request.params.keyword, true)
+    news.addNews(request.params.keyword, true)
     setTimeout(() => {
+        console.log(news.getSearchedNews(request.params.keyword))
         response.send(news.getSearchedNews(request.params.keyword))
-    }, 1000)
+    }, 2000)
 })
 
 

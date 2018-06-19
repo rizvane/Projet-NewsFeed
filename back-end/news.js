@@ -1,5 +1,5 @@
 const headLines = []
-let searchedNews = {}
+let searchedNews = []
 let updatedNews = []
 
 const NewsAPI = require('newsapi');
@@ -33,7 +33,7 @@ setInterval(function(){
 }, 10000)
 
 
-function addNews(obj, keyword, bool){
+function addNews(keyword, bool){
     if(searchedNews[keyword] !== undefined && bool === false){
         newsapi.v2.everything({
             q: keyword,
@@ -42,7 +42,8 @@ function addNews(obj, keyword, bool){
         }).then(response => {
             var count = searchedNews[keyword].count + 1
             var date = searchedNews[keyword].date
-            searchedNews[keyword] = {date: date, count: count, articles: response.articles}
+            searchedNews[keyword] = {date: date, count: count, articles: []}
+            searchedNews[keyword].articles.push(response.articles)
         });
     }else{
         let date = new Date();
@@ -57,7 +58,8 @@ function addNews(obj, keyword, bool){
             language: 'fr',
             pageSize: 20
         }).then(response => {
-            searchedNews[keyword] = {date: date, count: 1, articles: response.articles}
+            searchedNews[keyword] = {date: date, count: 1, articles : []}
+            searchedNews[keyword].articles.push(response.articles)
         });
     }
 }

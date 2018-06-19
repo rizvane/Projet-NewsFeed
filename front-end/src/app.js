@@ -5,34 +5,34 @@ var url = new URL(window.location.href)
 
 // VERIFICATION SI LA PAGE EST INDEX.HTML
 
-if(url.toString().includes('index.html')){
+if (url.toString().includes('index.html')) {
 
     const webSocket = new WebSocket('ws://localhost:8888');
 
     axios.get('http://localhost:8080').then((httpResponse) => {
         console.log(httpResponse.data)
         let i = 0;
+        let newsDivs = ""
 
         httpResponse.data.forEach((article, index) => {
-            let newsDivs = ""
             if (i === 0) {
                 newsDivs += "<div class='row'>"
             }
-            newsDivs += "<div class='col-xl-4 col-sm-6'>"
+            newsDivs += "<div class='col-xs-12 col-sm-4 col-xl-4 border'>"
             newsDivs += "<p class='text-center font-weight-bold'><a href='news.html?id=" + index + "'>" + article.title + "</a></p>"
-            newsDivs += "<a href='news.html?id=" + index + "'><img src='" + article.urlToImage + "' class='img-fluid'></a>"
-            newsDivs += "<hr><p>" + (article.description.length > 20 ) ? article.description.slice(0,20) + " ..." : article.description + "</p>"
-            newsDivs += "<p>" + article.author + "</p>"
+            newsDivs += "<a href='news.html?id=" + index + "'><img src='" + article.urlToImage + "' class='img-fluid'></a><hr>"
+            newsDivs += "<p>" + (article.description.length > 100) ? article.description.slice(0, 100) + " ..." : article.description + "</p>"
+            newsDivs += "<hr><p class='font-weight-bold float-right'>" + article.author + "</p>"
             newsDivs += "</div>"
 
-            if (i === 0) {
-                document.getElementById("news").innerHTML += "</div>"
+            if (i === 2) {
+                newsDivs += "</div>"
             }
             i++
-            if(i === 3){
+            if (i === 3) {
                 i = 0
             }
-            document.getElementById("news").innerHTML = newsDivs + document.getElementById("news").innerHTML
+            document.getElementById("news").innerHTML = newsDivs
         })
 
     }).catch((e) => {
@@ -53,13 +53,13 @@ if(url.toString().includes('index.html')){
     }
 }
 // VERIFICATION SI LA PAGE EST NEWS.HTML
-else if (url.toString().includes('news.html')){
+else if (url.toString().includes('news.html')) {
 
     var id = url.searchParams.get('id')
 
-    if(id === null){
+    if (id === null) {
         document.getElementById('news').innerHTML = "<h1>Une erreur s'est produite dans la requête</h1>"
-    }else {
+    } else {
         axios.get('http://localhost:8080/news/' + id).then((httpResponse) => {
             let article = httpResponse.data
 

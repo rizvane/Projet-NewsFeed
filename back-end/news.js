@@ -30,7 +30,7 @@ setInterval(function(){
             }
         })
     })
-}, 10000)
+}, 5000)
 
 
 function addNews(keyword, limit=20, bool){

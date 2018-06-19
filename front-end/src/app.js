@@ -69,6 +69,7 @@ else if (url.toString().includes('news.html')){
             newsDivs += "<img class='col-xl-12 col-sm-12' src='" + article.urlToImage + "' class='img-fluid'>"
             newsDivs += "<hr><p><h4>" + article.description + "</h4></p>"
             newsDivs += "<p class='text-right'>" + article.author + "</p>"
+            newsDivs += "<p class='text-right'><a href='" + article.url +"'>Source</a></p>"
             newsDivs += "</div>"
 
             document.getElementById("news").innerHTML = newsDivs
@@ -85,10 +86,14 @@ else if (url.toString().includes('news.html')){
         window.location.replace("index.html");
     }
     var lien = ""
+    var limit = 20
+    if(url.searchParams.get('limit') !== null){
+        limit = url.searchParams.get('limit')
+    }
     if(url.searchParams.get('renew') === null){
-        lien = 'http://localhost:8080/search/' + search
+        lien = 'http://localhost:8080/search/' + search + "/" + limit
     }else{
-        lien = 'http://localhost:8080/search/' + search + '/renew'
+        lien = 'http://localhost:8080/search/' + search + '/' + limit + '/renew'
     }
     axios.get(lien).then((httpResponse) => {
         let searched = httpResponse.data
@@ -96,20 +101,21 @@ else if (url.toString().includes('news.html')){
         document.getElementById('beforeBadge').innerHTML = "<div style='cursor: pointer;' href='search.html?search=" + search + "&renew=true' class='alert alert-primary' role='alert'> Nombre de recherche: " + searched.count + " -  Dernière actualisation : " + searched.date + "<a href='search.html?search=" + search + "&renew=true'> Cliquez ici pour mettre à jour </a></div>"
 
         let newsDivs = ""
+        var i = 0
+        searched.articles[0].forEach((article) => {
 
-        searched.articles.forEach((lesArticles) => {
-            lesArticles.forEach((article) => {
-
-                if(article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null){
+            if(article.title !== null && article.description !== null && article.urlToImage !== null && article.author !== null){
+                if(i < limit){
                     newsDivs += "<div class='col-xl-12 col-sm-12'>"
                     newsDivs += "<p class='text-center font-weight-bold'><h1>" + article.title + "</h1></p>"
                     newsDivs += "<img class='col-xl-10 col-sm-10' src='" + article.urlToImage + "' class='img-fluid'>"
                     newsDivs += "<hr><p><h4>" + article.description + "</h4></p>"
                     newsDivs += "<p class='text-right'>" + article.author + "</p>"
+                    newsDivs += "<p class='text-right'><a href='" + article.url +"'>Source</a></p>"
                     newsDivs += "</div>"
+                    i++
                 }
-
-            })
+            }
         })
 
         document.getElementById("news").innerHTML = newsDivs

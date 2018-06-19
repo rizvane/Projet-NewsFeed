@@ -1,14 +1,41 @@
 <html>
 <head>
     <title>News Feed</title>
+    <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
 </head>
 <body>
-<div id="container">
-    <div>
-        <button type="button" class="btn btn-primary">Danger!</button>
+<div class="container" id="container">
+    <nav class="navbar navbar-light bg-light"><span class="navbar-brand mb-0 h1">
+            <strong class="text-success">Be</strong><span
+    ><strong>U</strong>p<strong>T</strong>o<strong>D</strong>ate</span>
+    </span>
+        <div class="col-xs-12">
+            <form class="form-inline my-2 my-lg-0 col-xs-12">
+                <input class="form-control btn-inline-success mr-sm-2" type="search" placeholder="Search"
+                       aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    <hr>
+
+    <div id="news">
+    </div>
+
+
+    <footer>
+        <hr>
+        <p class="text-center font-weight-normal">
+            © Copyright 2018 - BeUptodate. Tous droits réservés
+        </p>
+    </footer>
+    <div id="test">
+
     </div>
 </div>
+
+
 </body>
 <script type="text/javascript" src="dist/news.js"></script>
 </html>
